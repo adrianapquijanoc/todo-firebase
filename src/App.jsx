@@ -1,40 +1,46 @@
 import { useState, useEffect } from "react";
 import { collection, addDoc, onSnapshot, updateDoc, doc } from "firebase/firestore";
-import { db } from "./firebase"; // Importa db desde firebase.js
+import { db } from "./firebase";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
+import "./index.css";
 
 function App() {
+  // 📌 Estado de las tareas
   const [todos, setTodos] = useState([]);
 
-  // Leer tareas en tiempo real
+  // 📌 Leer tareas en tiempo real desde Firestore
   useEffect(() => {
-    const unsub = onSnapshot(
-      collection(db, "todos"),
-      (snapshot) => {
-         const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log("Tareas leídas:", list); // <- mira aquí si trae datos
-         setTodos(list);
-      },
-      (error) => {
-        console.error("Error leyendo Firestore:", error);
-      }
-    );
-    return () => unsub();
+    const unsub = onSnapshot(collection(db, "todos"), (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setTodos(list);
+    }, (error) => {
+      console.error("Error leyendo Firestore:", error);
+    });
+
+    return () => unsub(); // limpieza al desmontar
   }, []);
 
-  // Agregar tarea
+  // 📌 Agregar una nueva tarea
   const addTodo = async (task) => {
-    if (!task) return;
-    await addDoc(collection(db, "todos"), { task, completed: false });
+    if (!task.trim()) return;
+    try {
+      await addDoc(collection(db, "todos"), { task, completed: false });
+    } catch (error) {
+      console.error("Error agregando tarea:", error);
+    }
   };
 
-  // Marcar/desmarcar tarea
+  // 📌 Marcar o desmarcar tarea completada
   const toggleComplete = async (id) => {
     const todo = todos.find((t) => t.id === id);
     if (!todo) return;
     const docRef = doc(db, "todos", id);
-    await updateDoc(docRef, { completed: !todo.completed });
+    try {
+      await updateDoc(docRef, { completed: !todo.completed });
+    } catch (error) {
+      console.error("Error actualizando tarea:", error);
+    }
   };
 
   return (

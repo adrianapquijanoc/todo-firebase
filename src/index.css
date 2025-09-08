@@ -1,20 +1,67 @@
+/* Fondo y contenedor principal */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .app-container {
-  max-width: 500px;
-  margin: 50px auto;
-  font-family: Arial, sans-serif;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  width: 400px;
   text-align: center;
 }
 
+/* Título */
+h1 {
+  color: #ff6b6b;
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Formulario */
+.todo-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
 .todo-form input {
-  padding: 5px;
+  padding: 10px;
   width: 70%;
+  border-radius: 10px 0 0 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
 .todo-form button {
-  padding: 5px 10px;
-  margin-left: 5px;
+  padding: 10px 15px;
+  border: none;
+  background: #ff6b6b;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0 10px 10px 0;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
+.todo-form button:hover {
+  background: #ff8787;
+  transform: scale(1.05);
+}
+
+/* Lista de tareas */
 .todo-list {
   list-style-type: none;
   padding: 0;
@@ -23,7 +70,42 @@
 .todo-list li {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  background: #ffe3e3;
   margin: 10px 0;
-  padding: 5px;
-  border-bottom: 1px solid #ccc;
+  padding: 12px 15px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.todo-list li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Botón de completar/desmarcar */
+.todo-list button {
+  background: #ff8787;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.todo-list button:hover {
+  background: #ff6b6b;
+  transform: scale(1.1);
+}
+
+/* Tarea completada */
+.todo-list li.completed {
+  text-decoration: line-through;
+  background: #d3f8e2;
+  color: #2d6a4f;
 }

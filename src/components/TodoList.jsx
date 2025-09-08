@@ -1,9 +1,11 @@
 export default function TodoList({ todos, toggleComplete }) {
-  console.log("Renderizando todos:", todos); // <- depuración
   return (
-    <ul>
-      {todos.map(todo => (
-        <li key={todo.id}>
+    <ul className="todo-list">
+      {todos.map((todo) => (
+        <li
+          key={todo.id}
+          style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+        >
           {todo.task}
           <button onClick={() => toggleComplete(todo.id)}>
             {todo.completed ? "Desmarcar" : "Completar"}
@@ -13,4 +15,3 @@ export default function TodoList({ todos, toggleComplete }) {
     </ul>
   );
 }
-

@@ -7,13 +7,14 @@ export default function TodoForm({ addTodo }) {
     e.preventDefault();
     if (task.trim()) {
       addTodo(task);
-      setTask("");
+      setTask(""); // limpiar input
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="todo-form">
       <input
+        type="text"
         value={task}
         onChange={(e) => setTask(e.target.value)}
         placeholder="Nueva tarea"
@@ -22,3 +23,4 @@ export default function TodoForm({ addTodo }) {
     </form>
   );
 }
+
