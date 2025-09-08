@@ -7,7 +7,7 @@ export default function TodoForm({ addTodo }) {
     e.preventDefault();
     if (task.trim()) {
       addTodo(task);
-      setTask("");
+      setTask(""); // limpia el input, pero la barra sigue visible
     }
   };
 
