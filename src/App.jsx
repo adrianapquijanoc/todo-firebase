@@ -1,76 +1,103 @@
 import React, { useEffect, useState } from "react";
-import { db, collection, addDoc, getDocs } from "./firebase";
+import { db } from "./firebase";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 
 export default function App() {
   const [texto, setTexto] = useState("");
   const [tareas, setTareas] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
-  // GET: Cargar tareas desde Firebase
+  const refTareas = collection(db, "tareas");
+
+  // GET: traer tareas (ordenadas por fecha desc)
   const cargarTareas = async () => {
-    const querySnapshot = await getDocs(collection(db, "tareas"));
-    const docs = [];
-    querySnapshot.forEach((doc) => {
-      docs.push({ id: doc.id, ...doc.data() });
-    });
-    setTareas(docs);
+    setCargando(true);
+    const q = query(refTareas, orderBy("creadaEn", "desc"));
+    const snap = await getDocs(q);
+    const lista = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    setTareas(lista);
+    setCargando(false);
   };
 
   useEffect(() => {
     cargarTareas();
   }, []);
 
-  // POST: Agregar tarea a Firebase
+  // POST: crear tarea
   const agregarTarea = async (e) => {
     e.preventDefault();
-    if (!texto.trim()) return;
-
-    await addDoc(collection(db, "tareas"), {
-      titulo: texto,
+    const titulo = texto.trim();
+    if (!titulo) return;
+    await addDoc(refTareas, {
+      titulo,
       completada: false,
-      fecha: new Date().toISOString()
+      creadaEn: serverTimestamp(),
     });
-
     setTexto("");
-    cargarTareas(); // Recarga las tareas
+    await cargarTareas();
+  };
+
+  // UPDATE: marcar completada/pendiente
+  const toggleCompletada = async (t) => {
+    const ref = doc(db, "tareas", t.id);
+    await updateDoc(ref, { completada: !t.completada });
+    await cargarTareas();
   };
 
   return (
     <div className="app">
-      <h1>TODO List con Firebase</h1>
+      <header className="header">
+        <h1>TODO List (Firebase)</h1>
+        <p className="sub">POST (crear) + GET (listar) + marcar completadas</p>
+      </header>
 
-      <form onSubmit={agregarTarea} style={{ marginBottom: "20px" }}>
+      <form className="form" onSubmit={agregarTarea}>
         <input
+          className="input"
           type="text"
-          placeholder="Escribe una tarea"
+          placeholder="Escribe una tarea…"
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
         />
-        <button>Agregar</button>
+        <button className="btn">Agregar</button>
       </form>
 
-      <div>
-        {tareas.length === 0 ? (
-          <p>No hay tareas todavía</p>
-        ) : (
-          <div style={{ display: "grid", gap: "10px" }}>
-            {tareas.map((t) => (
-              <div
-                key={t.id}
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ccc",
-                  borderRadius: "8px",
-                  background: "#f9f9f9"
-                }}
-              >
-                <strong>{t.titulo}</strong>
-                <p>{t.completada ? "✅ Completada" : "⏳ Pendiente"}</p>
+      {cargando ? (
+        <p className="muted">Cargando…</p>
+      ) : tareas.length === 0 ? (
+        <p className="muted">Sin tareas por ahora ✨</p>
+      ) : (
+        <div className="grid">
+          {tareas.map((t) => (
+            <article key={t.id} className="card">
+              <div className="card-row">
+                <label className="checkline">
+                  <input
+                    type="checkbox"
+                    checked={t.completada}
+                    onChange={() => toggleCompletada(t)}
+                  />
+                  <span className={t.completada ? "texto done" : "texto"}>
+                    {t.titulo}
+                  </span>
+                </label>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <div className="badge">
+                {t.completada ? "✅ Completada" : "⏳ Pendiente"}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
-
