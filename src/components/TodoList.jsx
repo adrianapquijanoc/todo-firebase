@@ -4,7 +4,7 @@ export default function TodoList({ todos, toggleComplete }) {
       {todos.map((todo) => (
         <li
           key={todo.id}
-          style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+          className={todo.completed ? "completed" : ""}
         >
           {todo.task}
           <button onClick={() => toggleComplete(todo.id)}>

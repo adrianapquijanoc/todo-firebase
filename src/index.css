@@ -1,9 +1,8 @@
-/* Fondo y contenedor principal */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  background: linear-gradient(135deg, #f6d365, #fda085);
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -19,7 +18,6 @@ body {
   text-align: center;
 }
 
-/* Título */
 h1 {
   color: #ff6b6b;
   font-size: 2.2rem;
@@ -27,7 +25,6 @@ h1 {
   text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 
-/* Formulario */
 .todo-form {
   display: flex;
   justify-content: center;
@@ -61,7 +58,6 @@ h1 {
   transform: scale(1.05);
 }
 
-/* Lista de tareas */
 .todo-list {
   list-style-type: none;
   padding: 0;
@@ -86,7 +82,6 @@ h1 {
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-/* Botón de completar/desmarcar */
 .todo-list button {
   background: #ff8787;
   border: none;
@@ -103,7 +98,6 @@ h1 {
   transform: scale(1.1);
 }
 
-/* Tarea completada */
 .todo-list li.completed {
   text-decoration: line-through;
   background: #d3f8e2;
