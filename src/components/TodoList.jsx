@@ -5,7 +5,7 @@ export default function TodoList({ todos, completeTodo }) {
     <TransitionGroup component="ul" className="todo-list">
       {todos.map((todo) => (
         <CSSTransition key={todo.id} timeout={300} classNames="fade">
-          <li>
+          <li className="todo-item">
             {todo.task}
             <button onClick={() => completeTodo(todo.id)}>Completar</button>
           </li>

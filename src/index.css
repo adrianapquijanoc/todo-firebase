@@ -59,11 +59,12 @@ h1 {
 }
 
 .todo-list {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.todo-list li {
+.todo-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -74,15 +75,9 @@ h1 {
   font-weight: 500;
   font-size: 1.1rem;
   transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
 }
 
-.todo-list li:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.todo-list button {
+.todo-item button {
   background: #ff8787;
   border: none;
   color: white;
@@ -93,11 +88,12 @@ h1 {
   transition: background 0.3s, transform 0.2s;
 }
 
-.todo-list button:hover {
+.todo-item button:hover {
   background: #ff6b6b;
   transform: scale(1.1);
 }
-/* Animación fade para tareas */
+
+/* Animaciones al aparecer y desaparecer */
 .fade-enter {
   opacity: 0;
   transform: translateY(-20px);
