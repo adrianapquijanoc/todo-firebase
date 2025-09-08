@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { collection, addDoc, onSnapshot, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, updateDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
@@ -28,20 +28,20 @@ function App() {
     }
   };
 
-  // Completar tarea y eliminar de Firestore
+  // Marcar tarea como completada
   const completeTodo = async (id) => {
     try {
       const docRef = doc(db, "todos", id);
-      await deleteDoc(docRef);
+      await updateDoc(docRef, { completed: true }); // solo marca completada
     } catch (error) {
-      console.error("Error eliminando tarea:", error);
+      console.error("Error marcando tarea:", error);
     }
   };
 
   return (
     <div className="app-container">
       <h1>Todo List con Firebase</h1>
-      <TodoForm addTodo={addTodo} /> {/* Barra siempre visible */}
+      <TodoForm addTodo={addTodo} />
       <TodoList todos={todos} completeTodo={completeTodo} />
     </div>
   );
