@@ -1,27 +1,24 @@
 import { useState, useEffect } from "react";
-import { collection, addDoc, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
 import "./index.css";
 
 function App() {
-  // 📌 Estado de las tareas
   const [todos, setTodos] = useState([]);
 
-  // 📌 Leer tareas en tiempo real desde Firestore
+  // Leer tareas en tiempo real
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "todos"), (snapshot) => {
       const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setTodos(list);
-    }, (error) => {
-      console.error("Error leyendo Firestore:", error);
-    });
+    }, (error) => console.error("Error leyendo Firestore:", error));
 
-    return () => unsub(); // limpieza al desmontar
+    return () => unsub();
   }, []);
 
-  // 📌 Agregar una nueva tarea
+  // Agregar tarea
   const addTodo = async (task) => {
     if (!task.trim()) return;
     try {
@@ -31,15 +28,13 @@ function App() {
     }
   };
 
-  // 📌 Marcar o desmarcar tarea completada
-  const toggleComplete = async (id) => {
-    const todo = todos.find((t) => t.id === id);
-    if (!todo) return;
-    const docRef = doc(db, "todos", id);
+  // Completar tarea y eliminar de Firestore
+  const completeTodo = async (id) => {
     try {
-      await updateDoc(docRef, { completed: !todo.completed });
+      const docRef = doc(db, "todos", id);
+      await deleteDoc(docRef);
     } catch (error) {
-      console.error("Error actualizando tarea:", error);
+      console.error("Error eliminando tarea:", error);
     }
   };
 
@@ -47,7 +42,7 @@ function App() {
     <div className="app-container">
       <h1>Todo List con Firebase</h1>
       <TodoForm addTodo={addTodo} />
-      <TodoList todos={todos} toggleComplete={toggleComplete} />
+      <TodoList todos={todos} completeTodo={completeTodo} />
     </div>
   );
 }

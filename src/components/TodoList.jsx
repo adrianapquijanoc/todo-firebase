@@ -1,15 +1,10 @@
-export default function TodoList({ todos, toggleComplete }) {
+export default function TodoList({ todos, completeTodo }) {
   return (
     <ul className="todo-list">
       {todos.map((todo) => (
-        <li
-          key={todo.id}
-          className={todo.completed ? "completed" : ""}
-        >
+        <li key={todo.id}>
           {todo.task}
-          <button onClick={() => toggleComplete(todo.id)}>
-            {todo.completed ? "Desmarcar" : "Completar"}
-          </button>
+          <button onClick={() => completeTodo(todo.id)}>Completar</button>
         </li>
       ))}
     </ul>

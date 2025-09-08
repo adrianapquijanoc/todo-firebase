@@ -7,7 +7,7 @@ export default function TodoForm({ addTodo }) {
     e.preventDefault();
     if (task.trim()) {
       addTodo(task);
-      setTask(""); // limpiar input
+      setTask("");
     }
   };
 
