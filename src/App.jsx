@@ -8,39 +8,33 @@ import "./index.css";
 function App() {
   const [todos, setTodos] = useState([]);
 
-  // Leer tareas en tiempo real
+  // Suscripción en tiempo real a Firestore
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "todos"), (snapshot) => {
-      const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setTodos(list);
-    }, (error) => console.error("Error leyendo Firestore:", error));
+    const unsub = onSnapshot(
+      collection(db, "todos"),
+      (snapshot) => {
+        const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setTodos(list);
+      },
+      (error) => console.error("Error leyendo Firestore:", error)
+    );
 
     return () => unsub();
   }, []);
 
-  // Agregar tarea
   const addTodo = async (task) => {
     if (!task.trim()) return;
-    try {
-      await addDoc(collection(db, "todos"), { task, completed: false });
-    } catch (error) {
-      console.error("Error agregando tarea:", error);
-    }
+    await addDoc(collection(db, "todos"), { task, completed: false });
   };
 
-  // Marcar tarea como completada
   const completeTodo = async (id) => {
-    try {
-      const docRef = doc(db, "todos", id);
-      await updateDoc(docRef, { completed: true }); // solo marca completada
-    } catch (error) {
-      console.error("Error marcando tarea:", error);
-    }
+    const docRef = doc(db, "todos", id);
+    await updateDoc(docRef, { completed: true });
   };
 
   return (
     <div className="app-container">
-      <h1>Todo List con Firebase</h1>
+      <h1>Todo List</h1>
       <TodoForm addTodo={addTodo} />
       <TodoList todos={todos} completeTodo={completeTodo} />
     </div>
