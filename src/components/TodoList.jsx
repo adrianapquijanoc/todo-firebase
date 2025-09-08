@@ -1,12 +1,16 @@
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+
 export default function TodoList({ todos, completeTodo }) {
   return (
-    <ul className="todo-list">
+    <TransitionGroup component="ul" className="todo-list">
       {todos.map((todo) => (
-        <li key={todo.id}>
-          {todo.task}
-          <button onClick={() => completeTodo(todo.id)}>Completar</button>
-        </li>
+        <CSSTransition key={todo.id} timeout={300} classNames="fade">
+          <li>
+            {todo.task}
+            <button onClick={() => completeTodo(todo.id)}>Completar</button>
+          </li>
+        </CSSTransition>
       ))}
-    </ul>
+    </TransitionGroup>
   );
 }

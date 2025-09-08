@@ -28,11 +28,13 @@ function App() {
     }
   };
 
+ 
   // Completar tarea y eliminar de Firestore
   const completeTodo = async (id) => {
     try {
       const docRef = doc(db, "todos", id);
-      await deleteDoc(docRef);
+      await deleteDoc(docRef); // elimina de Firestore
+      // no necesitas hacer setTodos, onSnapshot se encarga
     } catch (error) {
       console.error("Error eliminando tarea:", error);
     }
